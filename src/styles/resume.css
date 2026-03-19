@@ -1,0 +1,159 @@
+/* Resume stylesheet
+   Note: font-family, font-size, line-height, padding, and max-width are
+   applied via inline styles in ResumePreview.tsx so they reflect the
+   per-branch FormatSettings. Only structural / decorative rules live here. */
+
+.resume-body {
+  color: #1a1a1a;
+  background: #fff;
+  margin: 0 auto;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+}
+
+/* Name (H1) */
+.resume-body h1 {
+  font-size: 2em;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #111;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+/* Tagline / subtitle — paragraph immediately after H1 */
+.resume-body h1 + p {
+  font-size: 0.92em;
+  color: #555;
+  margin: 0 0 20px 0;
+}
+
+/* Section headers (H2) */
+.resume-body h2 {
+  font-size: 0.98em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #444;
+  border-bottom: 1.5px solid #ddd;
+  padding-bottom: 3px;
+  margin: 22px 0 10px 0;
+}
+
+/* Role / item headers (H3) */
+.resume-body h3 {
+  font-size: 1em;
+  font-weight: 600;
+  color: #111;
+  margin: 10px 0 2px 0;
+}
+
+/* Paragraphs — base margin; overridden per-branch via scoped style tag */
+.resume-body p {
+  margin: 0 0 6px 0;
+  color: #333;
+}
+
+/* Bullet lists — Tailwind preflight resets list-style, so set it explicitly */
+.resume-body ul {
+  margin: 4px 0 8px 0;
+  padding-left: 18px;
+  list-style-type: disc;
+}
+
+.resume-body li {
+  margin-bottom: 3px;
+  color: #333;
+  display: list-item;
+}
+
+/* Bold */
+.resume-body strong {
+  font-weight: 600;
+  color: #111;
+}
+
+/* Italic */
+.resume-body em {
+  font-style: italic;
+  color: #555;
+}
+
+/* Links — inherit surrounding text color so they don't stand out */
+.resume-body a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Code (inline) */
+.resume-body code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  background: #f4f4f4;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+/* HR divider */
+.resume-body hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 16px 0;
+}
+
+/* YAML frontmatter structured header */
+.resume-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.resume-header h1 {
+  font-size: 2em;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #111;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+  border: none;
+}
+
+.resume-header-row {
+  font-size: 0.88em;
+  color: #444;
+  margin: 3px 0;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.resume-header-row span,
+.resume-header-row a {
+  display: inline;
+  vertical-align: middle;
+}
+
+.resume-header-sep {
+  color: #bbb;
+  padding: 0 4px;
+}
+
+/* ── Entry row: Title (left) · Company (center) · Date (right) ──────────── */
+/* Triggered by lines containing " ~ " separators in markdown.               */
+.resume-entry-row {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+  margin: 0 0 6px 0;
+}
+
+.resume-entry-row .entry-left  { flex: 1; text-align: left; }
+.resume-entry-row .entry-center { flex: 1; text-align: center; }
+.resume-entry-row .entry-right  { flex: 1; text-align: right; }
+
+/* Keep Iconify SVGs inline and vertically centred with adjacent text */
+.resume-header svg {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  position: relative;
+  top: -0.05em;
+}

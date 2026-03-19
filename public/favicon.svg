@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Dark rounded background -->
+  <rect width="32" height="32" rx="7" fill="#111111"/>
+
+  <!-- Source node (indigo — root branch) -->
+  <circle cx="16" cy="7" r="3.5" fill="#4f46e5"/>
+
+  <!-- Stem line -->
+  <line x1="16" y1="10.5" x2="16" y2="15" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Left branch line -->
+  <line x1="16" y1="15" x2="10" y2="21" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Right branch line -->
+  <line x1="16" y1="15" x2="22" y2="21" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Left fork node (emerald) -->
+  <circle cx="10" cy="24.5" r="3.5" fill="#10b981"/>
+
+  <!-- Right fork node (violet) -->
+  <circle cx="22" cy="24.5" r="3.5" fill="#8b5cf6"/>
+</svg>

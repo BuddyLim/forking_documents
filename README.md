@@ -1,10 +1,10 @@
-# forking-documents
+# forking_documents
 
-[![CI](https://github.com/BuddyLim/forking-documents/actions/workflows/ci.yml/badge.svg)](https://github.com/limkuangtar/forking-documents/actions/workflows/ci.yml)
+[![CI](https://github.com/BuddyLim/forking_documents/actions/workflows/ci.yml/badge.svg)](https://github.com/limkuangtar/forking_documents/actions/workflows/ci.yml)
 
 A markdown-based resume and document editor with Git-like branching capabilities. Create documents, fork them into branches, compare diffs, and export to PDF.
 
-**[Live Demo](https://BuddyLim.github.io/forking-documents/)**
+**[Live Demo](https://BuddyLim.github.io/forking_documents/)**
 
 ---
 

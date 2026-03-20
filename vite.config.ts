@@ -2,8 +2,8 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
-export default defineConfig(() => ({
-  // base: command === 'build' ? '/forking_documents/' : '/',
+export default defineConfig(({ command }) => ({
+  base: command === "build" ? "/forking_documents/" : "/",
   plugins: [react()],
   test: {
     environment: "jsdom",

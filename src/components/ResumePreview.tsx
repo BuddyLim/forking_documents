@@ -56,7 +56,11 @@ function processEntryRows(markdown: string): string {
         s.trim().replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
       const colClass = (i: number) => {
         if (parts.length === 2) return i === 0 ? "entry-left" : "entry-right";
-        return i === 0 ? "entry-left" : i === 1 ? "entry-center" : "entry-right";
+        return i === 0
+          ? "entry-left"
+          : i === 1
+            ? "entry-center"
+            : "entry-right";
       };
       const spans = parts
         .map((p, i) => `<span class="${colClass(i)}">${toHtml(p)}</span>`)
@@ -105,6 +109,10 @@ function buildHeaderHtml(fm: FrontMatter): string {
   parts.push("</div>");
   return parts.join("\n");
 }
+
+// Stable reference — never changes between renders, preventing react-markdown
+// from tearing down and recreating its unified processor pipeline each render.
+const REHYPE_PLUGINS = [rehypeRaw];
 
 // ── Preview ───────────────────────────────────────────────────────────────────
 
@@ -199,16 +207,6 @@ export default function ResumePreview({ previewRef }: ResumePreviewProps) {
     return () => obs.disconnect();
   }, [paperWidthMm]);
 
-  // Re-scan for Iconify spans in both the hidden div and visible page cards
-  useEffect(() => {
-    if (!window.Iconify) return;
-    if (previewRef.current) window.Iconify.scan(previewRef.current);
-    if (pagesContainerRef.current)
-      window.Iconify.scan(pagesContainerRef.current);
-  });
-
-  if (!currentBranchId) return null;
-
   const { fm, body } = parseFrontMatter(rawContent);
 
   // Prepend the rendered header HTML so rehype-raw handles it the same way
@@ -218,6 +216,18 @@ export default function ResumePreview({ previewRef }: ResumePreviewProps) {
   const fullContent = hasHeader
     ? `${buildHeaderHtml(fm!)}\n\n${processedBody}`
     : processEntryRows(rawContent);
+
+  // Re-scan for Iconify spans in both the hidden div and visible page cards.
+  // Depend on fullContent so we only mutate the DOM when content actually changes,
+  // avoiding vDOM/DOM desync from Iconify's SVG replacements on every render.
+  useEffect(() => {
+    if (!window.Iconify) return;
+    if (previewRef.current) window.Iconify.scan(previewRef.current);
+    if (pagesContainerRef.current)
+      window.Iconify.scan(pagesContainerRef.current);
+  }, [fullContent]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!currentBranchId) return null;
 
   const paperWidthCss = PAPER_MAX_WIDTH[fmt.paperSize] ?? "210mm";
 
@@ -239,17 +249,20 @@ export default function ResumePreview({ previewRef }: ResumePreviewProps) {
     [data-resume="${currentBranchId}"] h2               { color: ${ac} !important; border-bottom-color: ${ac} !important; }
   `;
 
-  // Content rendered identically in both the hidden measurement div and each
-  // visible page card (same markdown, same scoped styles, same branch id).
-  const contentJsx = (
-    <>
-      <style>{scopedStyles}</style>
-      <ReactMarkdown rehypePlugins={[rehypeRaw]}>{fullContent}</ReactMarkdown>
-    </>
+  // Returns fresh JSX each call — do NOT hoist to a variable and reuse across
+  // multiple DOM locations, as React would share a single fiber node and cause
+  // "removeChild: not a child" errors during reconciliation.
+  const renderContent = () => (
+    <ReactMarkdown key={currentBranchId} rehypePlugins={REHYPE_PLUGINS}>
+      {fullContent}
+    </ReactMarkdown>
   );
 
   return (
     <div className="flex flex-col h-full bg-[#d4d4d4]">
+      {/* Scoped styles rendered once, not N+1 times */}
+      <style>{scopedStyles}</style>
+
       {/* ── Header bar ─────────────────────────────────────────────────────── */}
       <div className="flex items-center px-4 py-2 border-b border-[#c8c8c8] bg-[#e0e0e0] flex-shrink-0">
         <span className="text-[10px] uppercase tracking-widest text-gray-500 font-medium">
@@ -281,7 +294,7 @@ export default function ResumePreview({ previewRef }: ResumePreviewProps) {
           zIndex: -9999,
         }}
       >
-        {contentJsx}
+        {renderContent()}
       </div>
 
       {/* ── Paginated page cards ───────────────────────────────────────────── */}
@@ -356,7 +369,7 @@ export default function ResumePreview({ previewRef }: ResumePreviewProps) {
                       boxShadow: "none",
                     }}
                   >
-                    {contentJsx}
+                    {renderContent()}
                   </div>
                 </div>
               </div>

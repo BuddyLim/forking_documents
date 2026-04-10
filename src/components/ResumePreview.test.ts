@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseFrontMatter, computePreviewScale } from './ResumePreview'
+import { parseFrontMatter, computePreviewScale, processEntryRows } from './ResumePreview'
 
 // ── Preview scaling ────────────────────────────────────────────────────────────
 
@@ -34,6 +34,37 @@ describe('computePreviewScale', () => {
     const containerWidth = A4_WIDTH_PX + gutter
     const scale = computePreviewScale(containerWidth, A4_WIDTH_MM, gutter)
     expect(scale).toBe(1)
+  })
+})
+
+// ── processEntryRows: markdown link formatting ────────────────────────────────
+
+describe('processEntryRows — markdown link [label](url)', () => {
+  it('converts a bare markdown link to an anchor tag', () => {
+    const result = processEntryRows('[GitHub](https://github.com) ~ Date')
+    expect(result).toContain('<a href="https://github.com">GitHub</a>')
+  })
+
+  it('converts a link nested inside bold', () => {
+    const result = processEntryRows('**Title** ~ **[Independent Research Project](https://github.com/BuddyLim/trilayer)**')
+    expect(result).toContain('<a href="https://github.com/BuddyLim/trilayer">Independent Research Project</a>')
+  })
+
+  it('converts multiple links in the same line', () => {
+    const result = processEntryRows('[A](https://a.com) ~ [B](https://b.com)')
+    expect(result).toContain('<a href="https://a.com">A</a>')
+    expect(result).toContain('<a href="https://b.com">B</a>')
+  })
+
+  it('does not affect lines without ~ separator', () => {
+    const input = '[GitHub](https://github.com)'
+    const result = processEntryRows(input)
+    expect(result).toBe(input)
+  })
+
+  it('leaves plain text lines unchanged', () => {
+    const input = 'No separator here'
+    expect(processEntryRows(input)).toBe(input)
   })
 })
 

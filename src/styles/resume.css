@@ -64,6 +64,7 @@
   margin-bottom: 3px;
   color: #333;
   display: list-item;
+  break-inside: avoid;
 }
 
 /* Bold */
@@ -82,6 +83,14 @@
 .resume-body a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Links inside entry rows — dotted underline signals clickability */
+.resume-entry-row a {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  cursor: pointer;
 }
 
 /* Code (inline) */
@@ -142,6 +151,7 @@
   align-items: baseline;
   width: 100%;
   margin: 0 0 6px 0;
+  break-after: avoid;
 }
 
 .resume-entry-row .entry-left  { flex: 1; text-align: left; }

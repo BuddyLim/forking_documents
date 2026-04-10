@@ -45,7 +45,7 @@ export function parseFrontMatter(raw: string): {
 // Convert lines containing " ~ " separators into three-column flex rows.
 // Supports 2 parts (left · right) or 3 parts (left · center · right).
 // Markdown bold (**text**) within each part is converted to <strong>.
-function processEntryRows(markdown: string): string {
+export function processEntryRows(markdown: string): string {
   return markdown
     .split("\n")
     .map((line) => {
@@ -53,7 +53,10 @@ function processEntryRows(markdown: string): string {
       const parts = line.split(" ~ ");
       if (parts.length < 2) return line;
       const toHtml = (s: string) =>
-        s.trim().replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+        s
+          .trim()
+          .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
       const colClass = (i: number) => {
         if (parts.length === 2) return i === 0 ? "entry-left" : "entry-right";
         return i === 0
